@@ -7,7 +7,7 @@ public interface IAuthentication
 			FALSE - The request is not authenticated
 	*/
 	public boolean authenticate(String apiKey);
-
+	
 	/*
 		Given a username and a request action, returns:
 			TRUE - The user is authorized to perform the request action
