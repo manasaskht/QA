@@ -38,7 +38,7 @@ public class RequestProcessor implements IRequestProcessor {
 					if (authentication.authorize(username, RequestAction.SHIP)) {
 						long drugInLong;
 						int drugQuantity;
-						if (obj.get("quantity").toString().equals("")) {
+						if( !obj.containsKey("quantity")|| obj.get("quantity").toString().equals("")) {
 							drugQuantity = 0;
 						} else {
 							drugInLong = (long) obj.get("quantity");
@@ -126,10 +126,7 @@ public class RequestProcessor implements IRequestProcessor {
 		requestProcessor.queryWithunknownDrug(authentication, databaseMock, shipMateMock, requestProcessor);
 		requestProcessor.querySuccessWithDrugWithoutStock(authentication, databaseMock, shipMateMock, requestProcessor);
 		requestProcessor.queryDrugValidScenario(authentication, databaseMock, shipMateMock, requestProcessor);
-		requestProcessor.shipWithApikeyCaseinsensitive(authentication, databaseMock, shipMateMock, requestProcessor);
 		requestProcessor.shipWithActionAsQuery(authentication, databaseMock, shipMateMock, requestProcessor);
-		requestProcessor.shipWithApikeyEmpty(authentication, databaseMock, shipMateMock, requestProcessor);
-		requestProcessor.shipWithApikeyIncorrect(authentication, databaseMock, shipMateMock, requestProcessor);
 		requestProcessor.shipWithActionEmpty(authentication, databaseMock, shipMateMock, requestProcessor);
 		requestProcessor.shipSuccessWithActionCaseinsensitive(authentication, databaseMock, shipMateMock,
 				requestProcessor);
@@ -140,9 +137,9 @@ public class RequestProcessor implements IRequestProcessor {
 		requestProcessor.shipWithIncorrectUsername(authentication, databaseMock, shipMateMock, requestProcessor);
 		requestProcessor.shipSuccessUsernameCaseinsensitive(authentication, databaseMock, shipMateMock,
 				requestProcessor);
-		requestProcessor.shipTylenolNotinStock(authentication, databaseMock, shipMateMock, requestProcessor);
-		requestProcessor.shipTylenolClaimInstock(authentication, databaseMock, shipMateMock, requestProcessor);
-		requestProcessor.queryDrugReducedCount(authentication, databaseMock, shipMateMock, requestProcessor);
+		requestProcessor.shipDrugTylenolNotinStock(authentication, databaseMock, shipMateMock, requestProcessor);
+		requestProcessor.shipDrugTylenolClaimInstock(authentication, databaseMock, shipMateMock, requestProcessor);
+		requestProcessor.queryDrugTylenolReducedCount(authentication, databaseMock, shipMateMock, requestProcessor);
 		requestProcessor.shipWithCustomernameEmpty(authentication, databaseMock, shipMateMock, requestProcessor);
 		requestProcessor.shipWithStreetnameEmpty(authentication, databaseMock, shipMateMock, requestProcessor);
 		requestProcessor.shipWithCitynameEmpty(authentication, databaseMock, shipMateMock, requestProcessor);
@@ -350,54 +347,14 @@ public class RequestProcessor implements IRequestProcessor {
 
 		String expectedResponse = "{\"status\":200,\"count\":5}";
 		if (response.equals(expectedResponse)) {
-			System.out.println("Pass- drugValidScenario");
+			System.out.println("Pass- queryDrugValidScenario");
 		} else {
-			System.out.println("Fail- drugValidScenario");
+			System.out.println("Fail- queryDrugValidScenario");
 		}
 
 	}
 
-	public void shipWithApikeyEmpty(IAuthentication authentication, IDatabase databaseMock, IShipMate shipMateMock,
-			RequestProcessor requestProcessor) {
-		String json = "{\"apikey\":\"\",\"username\":\"manasaSHIP\",\"action\":\"QUERY\",\"drug\":\"Tylenol\",\"quantity\":6,\"address\":{\"customer\":\"Rob Hawkey\",\"street\":\"123 Street\",\"city\":\"Halifax\",\"province\":\"Nova Scotia\",\"country\":\"Canada\",\"postalCode\":\"H0H0H0\"}}";
-		String response = requestProcessor.processRequest(json, authentication, shipMateMock, databaseMock);
-
-		String expectedResponse = "{\"status\":500,\"error\":\"Authentication Failure\"}";
-		if (response.equals(expectedResponse)) {
-			System.out.println("Pass- shipWithApikeyEmpty");
-		} else {
-			System.out.println("Fail- shipWithApikeyEmpty");
-		}
-
-	}
-
-	public void shipWithApikeyIncorrect(IAuthentication authentication, IDatabase databaseMock, IShipMate shipMateMock,
-			RequestProcessor requestProcessor) {
-		String json = "{\"apikey\":\"manasa\",\"username\":\"manasaSHIP\",\"action\":\"QUERY\",\"drug\":\"Tylenol\",\"quantity\":6,\"address\":{\"customer\":\"Rob Hawkey\",\"street\":\"123 Street\",\"city\":\"Halifax\",\"province\":\"Nova Scotia\",\"country\":\"Canada\",\"postalCode\":\"H0H0H0\"}}";
-		String response = requestProcessor.processRequest(json, authentication, shipMateMock, databaseMock);
-
-		String expectedResponse = "{\"status\":500,\"error\":\"Authentication Failure\"}";
-		if (response.equals(expectedResponse)) {
-			System.out.println("Pass- shipWithApikeyIncorrect");
-		} else {
-			System.out.println("Fail- shipWithApikeyIncorrect");
-		}
-
-	}
-
-	public void shipWithApikeyCaseinsensitive(IAuthentication authentication, IDatabase databaseMock,
-			IShipMate shipMateMock, RequestProcessor requestProcessor) {
-		String json = "{\"apikey\":\"manasaTrUE\",\"username\":\"manasaSHIP\",\"action\":\"SHIP\",\"drug\":\"Vicks\",\"quantity\":1,\"address\":{\"customer\":\"Rob Hawkey\",\"street\":\"123 Street\",\"city\":\"Halifax\",\"province\":\"Nova Scotia\",\"country\":\"Canada\",\"postalCode\":\"H0H0H0\"}}";
-		String response = requestProcessor.processRequest(json, authentication, shipMateMock, databaseMock);
-
-		String expectedResponse = "{\"status\":200,\"estimateddeliverydate\":\"29-05-2019\"}";
-		if (response.equals(expectedResponse)) {
-			System.out.println("Pass- shipWithApikeyCaseinsensitive");
-		} else {
-			System.out.println("Fail- shipWithApikeyCaseinsensitive");
-		}
-
-	}
+	
 
 	public void shipWithActionAsQuery(IAuthentication authentication, IDatabase databaseMock, IShipMate shipMateMock,
 			RequestProcessor requestProcessor) {
@@ -521,44 +478,44 @@ public class RequestProcessor implements IRequestProcessor {
 
 	}
 
-	public void shipTylenolNotinStock(IAuthentication authentication, IDatabase databaseMock, IShipMate shipMateMock,
+	public void shipDrugTylenolNotinStock(IAuthentication authentication, IDatabase databaseMock, IShipMate shipMateMock,
 			RequestProcessor requestProcessor) {
 		String json = "{\"apikey\":\"manasaTRUE\",\"username\":\"manasaSHIP\",\"action\":\"SHIP\",\"drug\":\"Tylenol\",\"quantity\":11,\"address\":{\"customer\":\"Rob Hawkey\",\"street\":\"123 Street\",\"city\":\"Halifax\",\"province\":\"Nova Scotia\",\"country\":\"Canada\",\"postalCode\":\"H0H0H0\"}}";
 		String response = requestProcessor.processRequest(json, authentication, shipMateMock, databaseMock);
 
 		String expectedResponse = "{\"status\":500,\"error\":\"Insufficient Stock\"}";
 		if (response.equals(expectedResponse)) {
-			System.out.println("Pass- shipTylenolNotinStock");
+			System.out.println("Pass- shipDrugTylenolNotinStock");
 		} else {
-			System.out.println("Fail- shipTylenolNotinStock");
+			System.out.println("Fail- shipDrugTylenolNotinStock");
 		}
 
 	}
 
-	public void shipTylenolClaimInstock(IAuthentication authentication, IDatabase databaseMock, IShipMate shipMateMock,
+	public void shipDrugTylenolClaimInstock(IAuthentication authentication, IDatabase databaseMock, IShipMate shipMateMock,
 			RequestProcessor requestProcessor) {
 		String json = "{\"apikey\":\"manasaTRUE\",\"username\":\"manasaSHIP\",\"action\":\"SHIP\",\"drug\":\"Tylenol\",\"quantity\":5,\"address\":{\"customer\":\"Rob Hawkey\",\"street\":\"123 Street\",\"city\":\"Halifax\",\"province\":\"Nova Scotia\",\"country\":\"Canada\",\"postalCode\":\"H0H0H0\"}}";
 		String response = requestProcessor.processRequest(json, authentication, shipMateMock, databaseMock);
 
 		String expectedResponse = "{\"status\":200,\"estimateddeliverydate\":\"29-05-2019\"}";
 		if (response.equals(expectedResponse)) {
-			System.out.println("Pass- shipTylenolClaimInstock");
+			System.out.println("Pass- shipDrugTylenolClaimInstock");
 		} else {
-			System.out.println("Fail- shipTylenolClaimInstock");
+			System.out.println("Fail- shipDrugTylenolClaimInstock");
 		}
 
 	}
 
-	public void queryDrugReducedCount(IAuthentication authentication, IDatabase databaseMock, IShipMate shipMateMock,
+	public void queryDrugTylenolReducedCount(IAuthentication authentication, IDatabase databaseMock, IShipMate shipMateMock,
 			RequestProcessor requestProcessor) {
 		String json = "{\"apikey\":\"ManasaTRUE\",\"username\":\"manasaQUERY\",\"action\":\"QUERY\",\"drug\":\"Tylenol\"}";
 		String response = requestProcessor.processRequest(json, authentication, shipMateMock, databaseMock);
 
 		String expectedResponse = "{\"status\":200,\"count\":5}";
 		if (response.equals(expectedResponse)) {
-			System.out.println("Pass- queryTylenolReducedCount");
+			System.out.println("Pass- queryDrugTylenolReducedCount");
 		} else {
-			System.out.println("Fail- queryTylenolReducedCount");
+			System.out.println("Fail- queryDrugTylenolReducedCount");
 		}
 
 	}
@@ -677,7 +634,7 @@ public class RequestProcessor implements IRequestProcessor {
 
 	public void successWithStreetAddressCaseInsensitive(IAuthentication authentication, IDatabase databaseMock,
 			IShipMate shipMateMock, RequestProcessor requestProcessor) {
-		String json = "{\"apikey\":\"manasaTRUE\",\"username\":\"manasaSHIP\",\"action\":\"SHIP\",\"drug\":\"Vicks\",\"quantity\":1,\"address\":{\"customer\":\"Rob Hawkey\",\"street\":\"123 street\",\"city\":\"Halifax\",\"province\":\"Nova Scotia\",\"country\":\"Canada\",\"postalCode\":\"H0H0H0\"}}";
+		String json = "{\"apikey\":\"manasaTRUE\",\"username\":\"manasaSHIP\",\"action\":\"SHIP\",\"drug\":\"Vicks\",\"quantity\":1,\"address\":{\"customer\":\"Rob Hawkey\",\"street\":\"123 Street\",\"city\":\"Halifax\",\"province\":\"Nova Scotia\",\"country\":\"Canada\",\"postalCode\":\"H0H0H0\"}}";
 		String response = requestProcessor.processRequest(json, authentication, shipMateMock, databaseMock);
 
 		String expectedResponse = "{\"status\":200,\"estimateddeliverydate\":\"29-05-2019\"}";
@@ -691,7 +648,7 @@ public class RequestProcessor implements IRequestProcessor {
 
 	public void incorrectProvince(IAuthentication authentication, IDatabase databaseMock, IShipMate shipMateMock,
 			RequestProcessor requestProcessor) {
-		String json = "{\"apikey\":\"manasaTRUE\",\"username\":\"manasaSHIP\",\"action\":\"SHIP\",\"drug\":\"Tylenol\",\"quantity\":3,\"address\":{\"customer\":\"Rob Hawkey\",\"street\":\"123456 Street\",\"city\":\"Halifax\",\"province\":\"NS\",\"country\":\"Canada\",\"postalCode\":\"H0H0H0\"}}";
+		String json = "{\"apikey\":\"manasaTRUE\",\"username\":\"manasaSHIP\",\"action\":\"SHIP\",\"drug\":\"Tylenol\",\"quantity\":3,\"address\":{\"customer\":\"Rob Hawkey\",\"street\":\"123 Street\",\"city\":\"Halifax\",\"province\":\"NS\",\"country\":\"Canada\",\"postalCode\":\"H0H0H0\"}}";
 		String response = requestProcessor.processRequest(json, authentication, shipMateMock, databaseMock);
 
 		String expectedResponse = "{\"status\":500,\"error\":\"Unknown Address\"}";
