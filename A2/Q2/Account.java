@@ -1,19 +1,8 @@
-public class Account
+public abstract class Account
 {
-	protected float balance;
+	
+	public  abstract float getBalance();
 
-	public float getBalance()
-	{
-		return balance;
-	}
-
-	public void credit(float amount)
-	{
-		balance += amount;
-	}
-
-	public void debit(float amount)
-	{
-		balance -= amount;
-	}
+	
+	
 }

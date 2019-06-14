@@ -1,6 +1,6 @@
 public class Customer
 {
-	private String email;
+	protected String email;
 	private String country;
 	private String province;
 
@@ -21,10 +21,5 @@ public class Customer
 		return province.equals("Nova Scotia");
 	}
 
-	public void emailCustomerSpecialOffer()
-	{
-		String msg = "Congratulations! Your purchase history has earned you a 10% discount on your next purchase!";
-		EmailSender sender = new EmailSender();
-		sender.sendEmail(email, "10% off your next order!", msg);
-	}
+	
 }

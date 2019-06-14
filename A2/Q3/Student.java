@@ -1,5 +1,7 @@
 import java.io.*;
 import java.util.Scanner;
+import java.io.PrintWriter;
+
 
 public class Student
 {
@@ -15,22 +17,31 @@ public class Student
 		lastName = null;
 		email = null;
 	}
-
+ public String getBannerID() {
+		return bannerID;
+	}
 	public void setBannerID(String bannerID)
 	{
 		this.bannerID = bannerID;
 	}
-
+    
+	public String getFirstName() {
+		return firstName;
+	}
 	public void setFirstName(String firstName)
 	{
 		this.firstName = firstName;
 	}
-
+    public String getLastName() {
+		return lastName;
+	}
 	public void setLastName(String lastName)
 	{
 		this.lastName = lastName;
 	}
-
+     public String getEmail() {
+		return email;
+	}
 	public void setEmail(String email)
 	{
 		this.email = email;
@@ -53,19 +64,5 @@ public class Student
 		}
 	}
 
-	public void load()
-	{
-		try
-		{
-			Scanner in = new Scanner(new FileReader("student.txt"));
-			bannerID = in.next();
-			firstName = in.next();
-			lastName = in.next();
-			email = in.next();
-		}
-		catch (Exception e)
-		{
-			System.out.println("I am a bad programmer that hid an exception.");
-		}
-	}
+	
 }

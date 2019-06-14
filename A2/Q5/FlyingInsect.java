@@ -1,9 +1,6 @@
-public class FlyingInsect implements IInsect
+public class FlyingInsect implements IInsect, IFly
 {
-	public void swim()
-	{
-		// I can't swim I fly!
-	}
+	
 
 	public void fly()
 	{

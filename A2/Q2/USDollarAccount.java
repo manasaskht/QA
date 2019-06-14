@@ -1,4 +1,4 @@
-public class USDollarAccount extends Account
+public class USDollarAccount extends Transaction
 {
 	static final float EXCHANGE_RATE = 0.75f;
 
