@@ -1,5 +1,5 @@
 // This is the base Component abstract for the game's Composite pattern.
-public abstract class BoardComponent
+public abstract class BoardComponent implements IGameObserver
 {
 	protected BoardComponent parent;
 	
