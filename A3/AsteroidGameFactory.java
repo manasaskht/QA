@@ -7,13 +7,16 @@ public class AsteroidGameFactory implements IAsteroidGameFactory
 	@Override
 	public BoardComponent MakeSquare()
 	{
-		return new Square();
+		Square square = new Square();
+		GameBoard.Instance().GetSubject().attachObserver(square);
+		return  square;
 	}
 
 	@Override
 	public BoardComponent MakeBuilding()
 	{
 		Building building = new Building();
+		GameBoard.Instance().IncrementBuildingCount();
 		return building;
 	}
 
@@ -23,7 +26,14 @@ public class AsteroidGameFactory implements IAsteroidGameFactory
 		Asteroid asteroid = new Asteroid(height);
 		return asteroid;
 	}
-	
+	@Override
+	public BoardComponent MakeShield(BoardComponent square) {
+		//using Decorator pattern to attach shield object to the observer list and detach square object from the list
+		GameBoard.Instance().GetSubject().detachObserver(square);
+		BoardComponent shield = new Shield(square);
+		GameBoard.Instance().GetSubject().attachObserver(shield);
+		return shield;
+	}
 	@Override
 	public ArrayList<ArrayList<BoardComponent>> MakeBoard(int height, int width)
 	{
@@ -83,6 +93,10 @@ public class AsteroidGameFactory implements IAsteroidGameFactory
 			{
 				// TODO:  Implement a command to spawn a building.  It should be similar
 				//        to SPAWN_ASTEROID above.  The command must increment the building count!
+				int x = Integer.parseInt(args[0]);
+				int y = Integer.parseInt(args[1]);
+				BoardComponent square = GameBoard.Instance().GetBoard().get(y).get(x);
+				return new SpawnBuildingCommand(square, args);
 			}
 			case "SPAWN_SHIELD":
 			{
@@ -92,6 +106,10 @@ public class AsteroidGameFactory implements IAsteroidGameFactory
 				//			 While the shield is alive buildings in the square do not take damage from
 				//			 asteroid impacts.  When the shield health hits 0 it is destroyed and
 				//			 removed from decorating the Square.
+				int x = Integer.parseInt(args[0]);
+				int y = Integer.parseInt(args[1]);
+				BoardComponent square = GameBoard.Instance().GetBoard().get(y).get(x);
+				return new SpawnShieldCommand(square, args);
 			}
 		}
 		return null;

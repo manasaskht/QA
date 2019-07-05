@@ -36,4 +36,14 @@ public class Square extends BoardComponent
 	{
 		children.remove(child);
 	}
+	@Override
+	public void Update(BoardComponent asteroidHit) {
+
+		// TO update the components of the square,  which is hit by an asteroid
+		if (this.equals(asteroidHit)) {
+			for (int i = 0; i < children.size(); i++) {
+				children.get(i).Update(asteroidHit);
+			}
+		}
+	}
 }

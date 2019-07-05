@@ -22,6 +22,8 @@ public class Asteroid extends BoardComponent
 			// observer to tell it that it impacted the ground in the square it belongs
 			// to.
 			// <-- Send event to observer.
+
+			GameBoard.Instance().GetSubject().notifyObservers(parent);
 			
 			// It should then remove itself from its parent, it no longer exists in the
 			// hierarchy and should not receive any more operations.
@@ -39,5 +41,10 @@ public class Asteroid extends BoardComponent
 	public void Remove(BoardComponent child)
 	{
 		// I'm a leaf!
-	}	
+	}
+	@Override
+	public void Update(BoardComponent asteroidHit) {
+		// I'm a leaf
+
+	}
 }
