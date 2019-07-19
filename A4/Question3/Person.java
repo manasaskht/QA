@@ -1,22 +1,21 @@
 public class Person
 {
 	public String name;
+	public Address address;
 
 	public Person()
 	{
 		name = "Rob";
+		address = new Address("Rob street", "Rob city", "Rob province", "Rob postalcode");
 	}
 
 	public boolean isPersonRob()
 	{
-		return name.equals("Rob") && isRobsAddress("Rob street", "Rob city", "Rob province", "Rob postalcode");
+		return name.equals("Rob") && isRobsAddress(address);
 	}
 
-	private boolean isRobsAddress(String street, String city, String province, String postalCode)
+	private boolean isRobsAddress(Address address)
 	{
-		return street.equals("Rob street") &&
-			city.equals("Rob city") &&
-			province.equals("Rob province") &&
-			postalCode.equals("Rob postalcode");
+		return address.addressValidator(address);
 	}
 }

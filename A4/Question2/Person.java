@@ -1,46 +1,41 @@
 public class Person
 {
 	private String name;
-
-	private String areaCode;
-	private String phoneNumber;
-
-	private String userName;
-	private String password;
+	private ContactDetails phoneNumber;
+	private UserValidation validation;
 
 	public Person(String name)
 	{
 		this.name = name;
+		validation = new UserValidation();
+     	phoneNumber = new ContactDetails();
 	}
 
 	public void setAreaCode(String areaCode)
 	{
-		this.areaCode = areaCode;
+		phoneNumber.setAreaCode(areaCode);
 	}
 	public String getAreaCode()
 	{
-		return areaCode;
+		return phoneNumber.getAreaCode();
 	}
-	public void setPhoneNumber(String phoneNumber)
+	public void setPhoneNumber(String PhoneNumber)
 	{
-		this.phoneNumber = phoneNumber;
+		phoneNumber.setPhoneNumber(PhoneNumber);
 	}
 	public String getPhoneNumber()
 	{
-		if (areaCode != null && areaCode != "")
-		{
-			return "(" + areaCode + ") " + phoneNumber; 
-		}
-		return phoneNumber;
+		
+		return phoneNumber.getPhoneNumber();
 	}
 
 	public void setLoginCredentials(String userName, String password)
 	{
-		this.userName = userName;
-		this.password = password;
+		validation.setUserName(userName);
+		validation.setPassword(password);
 	}
 	public boolean authenticateUser()
 	{
-		return (userName.equals("joe") && password.equals("joepass"));
+		return validation.AuthenticateUser();
 	}
 }
